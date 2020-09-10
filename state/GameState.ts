@@ -1,28 +1,29 @@
-import {ArraySchema, Schema, type} from "@colyseus/schema";
+import {Schema, type} from "@colyseus/schema";
 import {getRandomBlock, Tetrolyso} from "./Tetrolyso";
+import {Position} from "./Position";
+import {Board} from "./Board";
 
 export class GameState extends Schema {
-    @type(["number"])
-    board: number[];
-
-    @type("number")
-    rows: number;
-
-    @type("number")
-    cols: number;
+    @type(Board)
+    board: Board;
 
     @type(Tetrolyso)
     currentBlock: Tetrolyso;
 
+    @type(Position)
+    currentPosition: Position;
+
     @type(Tetrolyso)
     nextBlock: Tetrolyso;
 
+    @type("number")
+    clearedLines: number;
+
     constructor(rows: number = 20, cols: number = 10, initialValue: number = 0) {
         super();
-        this.rows = rows;
-        this.cols = cols;
-        this.board = new ArraySchema<number>(...(new Array<number>(rows * cols).fill(initialValue)));
+        this.board = new Board(rows, cols, initialValue);
         this.currentBlock = getRandomBlock();
+        this.currentPosition = new Position(0, 5);
         this.nextBlock = getRandomBlock();
     }
 }
