@@ -1,40 +1,27 @@
-import {ArraySchema, Schema, type} from "@colyseus/schema";
+import {ArraySchema, type} from "@colyseus/schema";
+import {Board} from "./Board";
 
-export abstract class Tetrolyso extends Schema {
-    @type(["number"])
-    board: number[];
-
+export abstract class Tetrolyso extends Board {
     @type("number")
-    rows: number;
+    color: number;
 
-    @type("number")
-    cols: number;
-
-    @type("number")
-    positionX: number;
-
-    @type("number")
-    positionY: number;
-
-    protected currentValue: number;
-    abstract values: number[][];
+    protected currentOrientation: number;
+    abstract orientations: number[][];
 
     constructor() {
         super();
-        this.currentValue = 0;
+        this.currentOrientation = 0;
     }
 
     rotate(): void {
-        this.currentValue = (this.currentValue + 1) % this.values.length;
-        this.board = new ArraySchema<number>(...(this.values[this.currentValue]))
+        this.currentOrientation = (this.currentOrientation + 1) % this.orientations.length;
+        this.values = new ArraySchema<number>(...(this.orientations[this.currentOrientation]))
     }
 }
 
-export type TetrolysoPreview = Omit<Tetrolyso, 'positionX' | 'positionY'>;
-
 const BLOCKS = [
     class O extends Tetrolyso {
-        values = <number[][]>[
+        orientations = <number[][]>[
             [1, 1, 1, 1],
         ];
 
@@ -42,11 +29,12 @@ const BLOCKS = [
             super();
             this.rows = 2;
             this.cols = 2;
-            this.board = new ArraySchema<number>(...(this.values[this.currentValue]));
+            this.values = new ArraySchema<number>(...(this.orientations[this.currentOrientation]));
+            this.color = 0x008000;
         }
     },
     class T extends Tetrolyso {
-        values = <number[][]>[
+        orientations = <number[][]>[
             [0, 1, 0, 1, 1, 1, 0, 0, 0],
             [0, 1, 0, 0, 1, 1, 0, 1, 0],
             [0, 0, 0, 1, 1, 1, 0, 1, 0],
@@ -57,11 +45,12 @@ const BLOCKS = [
             super();
             this.rows = 3;
             this.cols = 3;
-            this.board = new ArraySchema<number>(...(this.values[this.currentValue]));
+            this.values = new ArraySchema<number>(...(this.orientations[this.currentOrientation]));
+            this.color = 0x1E90FF;
         }
     },
     class I extends Tetrolyso {
-        values = <number[][]>[
+        orientations = <number[][]>[
             [0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0],
@@ -72,11 +61,12 @@ const BLOCKS = [
             super();
             this.rows = 4;
             this.cols = 4;
-            this.board = new ArraySchema<number>(...(this.values[this.currentValue]));
+            this.values = new ArraySchema<number>(...(this.orientations[this.currentOrientation]));
+            this.color = 0xFFD700;
         }
     },
     class Z extends Tetrolyso {
-        values = <number[][]>[
+        orientations = <number[][]>[
             [1, 1, 0, 0, 1, 1, 0, 0, 0],
             [0, 0, 1, 0, 1, 1, 0, 1, 0],
         ];
@@ -85,11 +75,12 @@ const BLOCKS = [
             super();
             this.rows = 3;
             this.cols = 3;
-            this.board = new ArraySchema<number>(...(this.values[this.currentValue]));
+            this.values = new ArraySchema<number>(...(this.orientations[this.currentOrientation]));
+            this.color = 0xFF6347;
         }
     },
     class S extends Tetrolyso {
-        values = <number[][]>[
+        orientations = <number[][]>[
             [0, 1, 1, 1, 1, 0, 0, 0, 0],
             [1, 0, 0, 1, 1, 0, 0, 1, 0],
         ];
@@ -98,11 +89,12 @@ const BLOCKS = [
             super();
             this.rows = 3;
             this.cols = 3;
-            this.board = new ArraySchema<number>(...(this.values[this.currentValue]));
+            this.values = new ArraySchema<number>(...(this.orientations[this.currentOrientation]));
+            this.color = 0xBA55D3;
         }
     },
     class L extends Tetrolyso {
-        values = <number[][]>[
+        orientations = <number[][]>[
             [0, 0, 1, 1, 1, 1, 0, 0, 0],
             [0, 1, 0, 0, 1, 0, 0, 1, 1],
             [0, 0, 0, 1, 1, 1, 1, 0, 0],
@@ -113,11 +105,12 @@ const BLOCKS = [
             super();
             this.rows = 3;
             this.cols = 3;
-            this.board = new ArraySchema<number>(...(this.values[this.currentValue]));
+            this.values = new ArraySchema<number>(...(this.orientations[this.currentOrientation]));
+            this.color = 0x48D1CC;
         }
     },
     class J extends Tetrolyso {
-        values = <number[][]>[
+        orientations = <number[][]>[
             [1, 0, 0, 1, 1, 1, 0, 0, 0],
             [0, 1, 1, 0, 1, 0, 0, 1, 0],
             [0, 0, 0, 1, 1, 1, 0, 0, 1],
@@ -128,7 +121,8 @@ const BLOCKS = [
             super();
             this.rows = 3;
             this.cols = 3;
-            this.board = new ArraySchema<number>(...(this.values[this.currentValue]));
+            this.values = new ArraySchema<number>(...(this.orientations[this.currentOrientation]));
+            this.color = 0x7FFFD4;
         }
     },
 ];
