@@ -19,6 +19,12 @@ export class GameState extends Schema {
     @type("number")
     clearedLines: number;
 
+    @type("number")
+    level: number;
+
+    @type("number")
+    totalPoints: number;
+
     constructor(rows: number = 20, cols: number = 10, initialValue: number = 0) {
         super();
         this.board = new Board(rows, cols, initialValue);
