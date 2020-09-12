@@ -25,9 +25,9 @@ export class GameState extends Schema {
     @type("number")
     totalPoints: number;
 
-    constructor(rows: number = 20, cols: number = 10, initialValue: number = 0, initialLevel = 0) {
+    constructor(rows: number = 20, cols: number = 10, initialLevel = 0) {
         super();
-        this.board = new Board(rows, cols, initialValue);
+        this.board = new Board(rows, cols);
         this.currentBlock = getRandomBlock();
         this.currentPosition = new Position(0, 5);
         this.nextBlock = getRandomBlock();
