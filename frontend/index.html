@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tetrolyseus</title>
+    <link href="https://unpkg.com/nes.css@2.3.0/css/nes.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="index.css">
+</head>
+<body>
+<div class="nes-container is-dark with-title">
+    <p class="title">Tetrolyseus</p>
+    <p>A cooperative approach to the famous blocks game.</p>
+</div>
+<div id="playingfield">
+    <div id="board" class="nes-container is-rounded is-dark"></div>
+    <div id="infobox">
+        <div class="nes-container is-dark with-title">
+            <p class="title">Score</p>
+            <p id="score"></p>
+        </div>
+        <div class="nes-container is-dark with-title">
+            <p class="title">Level</p>
+            <p id="level"></p>
+        </div>
+        <div class="nes-container is-dark with-title">
+            <p class="title">Next</p>
+            <div id="preview"></div>
+        </div>
+    </div>
+</div>
+</body>
+<script src="index.ts" type="application/javascript"></script>
+</html>
