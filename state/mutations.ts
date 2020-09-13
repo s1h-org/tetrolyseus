@@ -1,6 +1,8 @@
 import {Board} from "./Board";
 import {Tetrolyso} from "./Tetrolyso";
 import {Position} from "./Position";
+import {ArraySchema} from "@colyseus/schema";
+
 
 export const queryByRowAndColumn = (board: Board) => (row: number, col: number): number => {
     return board.values[row * board.cols + col];
@@ -16,11 +18,15 @@ export const addEmptyRowToBoard = (board: Board): void => {
 }
 
 const addRowToBoard = (board: Board, newRow: number[]) => {
-    board.values.unshift(...newRow);
+    const boardValues = [...board.values];
+    boardValues.unshift(...newRow);
+    board.values = new ArraySchema<number>(...boardValues);
 }
 
 export const deleteRowsFromBoard = (board: Board, rowToDelete: number, amountOfRowsToDelete: number = 1) => {
-    board.values.splice(rowToDelete * board.cols, board.cols * amountOfRowsToDelete);
+    const boardValues = [...board.values];
+    boardValues.splice(rowToDelete * board.cols, board.cols * amountOfRowsToDelete);
+    board.values = new ArraySchema<number>(...boardValues);
 }
 
 export const freezeCurrentTetrolyso = (board: Board, tetrolyso: Tetrolyso, position: Position) => {
