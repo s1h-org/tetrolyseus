@@ -1,8 +1,8 @@
 import {Client, Room} from "colyseus";
 import {GameState} from "../state/GameState";
 import {Position} from "../state/Position";
-import {isRowCompleted, isRowEmpty} from "./validation";
-import {addEmptyRowToBoard, deleteRowsFromBoard} from "../state/mutations";
+import {collidesWithBoard, isBottomOutOfBounds, isRowCompleted, isRowEmpty} from "./validation";
+import {addEmptyRowToBoard, deleteRowsFromBoard, freezeCurrentTetrolyso} from "../state/mutations";
 import {getRandomBlock} from "../state/Tetrolyso";
 
 export class TetrolyseusRoom extends Room<GameState> {
@@ -45,6 +45,18 @@ export class TetrolyseusRoom extends Room<GameState> {
         );
         this.state.currentBlock = this.state.nextBlock.clone();
         this.state.nextBlock = getRandomBlock();
+    }
+
+    private moveOrFreezeTetrolyso(nextPosition: Position) {
+        if (
+            !isBottomOutOfBounds(this.state.board, this.state.currentBlock, nextPosition) &&
+            !collidesWithBoard(this.state.board, this.state.currentBlock, nextPosition)
+        ) {
+            this.state.currentPosition = nextPosition;
+        } else {
+            freezeCurrentTetrolyso(this.state.board, this.state.currentBlock, this.state.currentPosition);
+            this.dropNewTetrolyso();
+        }
     }
 
     onCreate(options: any) {
