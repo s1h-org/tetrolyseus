@@ -61,3 +61,34 @@ export const isRightOutOfBounds = (board: Board, tetrolyso: Tetrolyso, position:
     }
     return false;
 }
+
+/**
+ * isBottomOutOfBounds checks whether a given Tetrolyso is out of bounds of a board at its current (top-left) position
+ * We determine how many rows are out of bounds (position.row + tetrolyso.rows - board.rows) and afterwards check each Tetrolyso row which sits outside the
+ * board whether it is a "valid" Tetrolyso part (has a non-zero value)
+ *
+ * If so, we're out of bounds
+ *
+ * @param board The game board we don't want to exceed
+ * @param tetrolyso The Tetrolyso which might be out of bounds
+ * @param position The current top-left position of our Tetrolyso
+ */
+export const isBottomOutOfBounds = (board: Board, tetrolyso: Tetrolyso, position: Position): boolean => {
+    if (position.row + tetrolyso.rows < board.rows) {
+        return false;
+    }
+
+    const blockElement = queryByRowAndColumn(tetrolyso);
+
+    const offsetFromBoard = position.row + tetrolyso.rows - board.rows;
+    const offset = tetrolyso.rows - 1 - offsetFromBoard;
+
+    for (let row = tetrolyso.rows - 1; row > offset; --row) {
+        for (let col = 0; col < tetrolyso.cols; ++col) {
+            if (blockElement(row, col) !== 0) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
