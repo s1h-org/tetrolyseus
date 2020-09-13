@@ -10,7 +10,7 @@ html, body {
 
 #board {
     display: grid;
-    width: 25%;
+    height: 85%;
 }
 
 #playingfield {

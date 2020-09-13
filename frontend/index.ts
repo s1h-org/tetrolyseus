@@ -29,9 +29,7 @@ const removeChildren = (parentElement: HTMLElement): void => {
 const drawBoard = (board: Board): void => {
     const boardElement = queryBoardElement();
     const elementRect = boardElement.getBoundingClientRect();
-    const columnWidth = Math.floor((elementRect.width - 32) / board.cols);
-    const rowHeight = Math.floor((elementRect.height - 32) / board.rows);
-    const blockHeight = Math.min(columnWidth, rowHeight);
+    const blockHeight = Math.floor((elementRect.height - 32) / board.rows);
     boardElement.style.gridTemplateColumns = `repeat(${board.cols}, ${blockHeight}px)`;
     boardElement.style.gridTemplateRows = `repeat(${board.rows}, ${blockHeight}px)`;
     boardElement.style.height = "fit-content";
