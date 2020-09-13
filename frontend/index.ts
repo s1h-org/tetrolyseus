@@ -56,7 +56,7 @@ const drawPreview = (preview: Tetrolyso): void => {
 
     const blockPosition = queryByRowAndColumn(preview);
 
-    for (let row = 0; row < 5 ; ++row) {
+    for (let row = 0; row < 5; ++row) {
         for (let col = 0; col < 5; ++col) {
             const cellDiv = document.createElement("div");
             cellDiv.id = `preview-r${row}-c${col}`
@@ -67,7 +67,7 @@ const drawPreview = (preview: Tetrolyso): void => {
     for (let row = 0; row < preview.rows; ++row) {
         for (let col = 0; col < preview.cols; ++col) {
             if (blockPosition(row, col) !== 0) {
-                const boardSquare = <HTMLDivElement>document.querySelector(`#preview-r${row+1}-c${col+1}`);
+                const boardSquare = <HTMLDivElement>document.querySelector(`#preview-r${row + 1}-c${col + 1}`);
                 boardSquare.style.background = `#${preview.color.toString(16)}`;
                 boardSquare.style.border = `1px solid black`;
             }
@@ -101,20 +101,20 @@ const drawScore = (score: number) => {
 document.addEventListener('DOMContentLoaded', async () => {
     const client = new Client('ws://localhost:2567');
 
-    const room: Room<GameState> = await client.joinOrCreate<GameState>("tetrolyseus").then(room => {
-        document.addEventListener('keydown', (ev: KeyboardEvent) => {
-            if (ev.code === "Space") {
-                room.send("rotate", {});
-            } else if (ev.code === "ArrowLeft") {
-                room.send("move", LEFT);
-            } else if (ev.code === "ArrowRight") {
-                room.send("move", RIGHT);
-            } else if (ev.code === "ArrowDown") {
-                room.send("move", DOWN);
-            }
-        })
-        return room;
+    const room: Room<GameState> = await client.joinOrCreate<GameState>("tetrolyseus");
+
+    document.addEventListener('keydown', (ev: KeyboardEvent) => {
+        if (ev.code === "Space") {
+            room.send("rotate", {});
+        } else if (ev.code === "ArrowLeft") {
+            room.send("move", LEFT);
+        } else if (ev.code === "ArrowRight") {
+            room.send("move", RIGHT);
+        } else if (ev.code === "ArrowDown") {
+            room.send("move", DOWN);
+        }
     });
+
     room.onStateChange((newState: GameState) => {
         clearBoard();
         clearPreview();
