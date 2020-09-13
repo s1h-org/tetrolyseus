@@ -1,4 +1,4 @@
-import {Client, Room} from "colyseus";
+import {Client, Delayed, Room} from "colyseus";
 import {GameState} from "../state/GameState";
 import {Position} from "../state/Position";
 import {collidesWithBoard, isBottomOutOfBounds, isRowCompleted, isRowEmpty} from "./validation";
@@ -10,6 +10,8 @@ export class TetrolyseusRoom extends Room<GameState> {
     private DEFAULT_ROWS = 20;
     private DEFAULT_COLS = 10;
     private DEFAULT_LEVEL = 0;
+
+    private gameLoop!: Delayed;
 
     private dropTetrolyso() {
         return new Position(
@@ -48,6 +50,12 @@ export class TetrolyseusRoom extends Room<GameState> {
         this.state.nextBlock = getRandomBlock();
     }
 
+    private checkGameOver() {
+        if (collidesWithBoard(this.state.board, this.state.currentBlock, this.state.currentPosition)) {
+            this.gameLoop.clear();
+        }
+    }
+
     private moveOrFreezeTetrolyso(nextPosition: Position) {
         if (
             !isBottomOutOfBounds(this.state.board, this.state.currentBlock, nextPosition) &&
@@ -57,6 +65,7 @@ export class TetrolyseusRoom extends Room<GameState> {
         } else {
             freezeCurrentTetrolyso(this.state.board, this.state.currentBlock, this.state.currentPosition);
             this.dropNewTetrolyso();
+            this.checkGameOver();
         }
     }
 
