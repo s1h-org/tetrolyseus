@@ -4,6 +4,7 @@ import {Position} from "../state/Position";
 import {collidesWithBoard, isBottomOutOfBounds, isRowCompleted, isRowEmpty} from "./validation";
 import {addEmptyRowToBoard, deleteRowsFromBoard, freezeCurrentTetrolyso} from "../state/mutations";
 import {getRandomBlock} from "../state/Tetrolyso";
+import {computeScoreForClearedLines} from "./scoring";
 
 export class TetrolyseusRoom extends Room<GameState> {
     private DEFAULT_ROWS = 20;
@@ -57,6 +58,18 @@ export class TetrolyseusRoom extends Room<GameState> {
             freezeCurrentTetrolyso(this.state.board, this.state.currentBlock, this.state.currentPosition);
             this.dropNewTetrolyso();
         }
+    }
+
+    private determineNextLevel(): number {
+        return Math.floor(this.state.clearedLines / 10);
+    }
+
+    private updateTotalPoints(completedLines: any[]) {
+        this.state.totalPoints += computeScoreForClearedLines(completedLines.length, this.state.level);
+    }
+
+    private updateClearedLines(completedLines: any[]) {
+        this.state.clearedLines += completedLines.length;
     }
 
     onCreate(options: any) {
