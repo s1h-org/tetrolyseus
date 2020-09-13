@@ -92,3 +92,61 @@ export const isBottomOutOfBounds = (board: Board, tetrolyso: Tetrolyso, position
     }
     return false;
 }
+
+export const collidesWithBoard = (board: Board, tetrolyso: Tetrolyso, position: Position): boolean => {
+    const blockElement = queryByRowAndColumn(tetrolyso);
+    const boardElement = queryByRowAndColumn(board);
+
+    for (let boardRow = position.row; boardRow < position.row + tetrolyso.rows; ++boardRow) {
+        for (let boardCol = position.col; boardCol < position.col + tetrolyso.cols; ++boardCol) {
+            const blockRow = boardRow - position.row;
+            const blockCol = boardCol - position.col;
+            if (blockElement(blockRow, blockCol) !== 0 && boardElement(boardRow, boardCol) !== 0) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+/**
+ * After rotating a block it might happen that, given its current position, it moves out of bounds
+ * keepTetrolysoInsideBounds will move a Tetrolyse to the inside of our game board until it is
+ * no longer out of bounds on either of left, right or bottom side
+ * @private
+ */
+export const keepTetrolysoInsideBounds = (board: Board, tetrolyso: Tetrolyso, position: Position): Position => {
+    const newPosition = position.clone();
+    while (isLeftOutOfBounds(board, tetrolyso, newPosition)) {
+        newPosition.col += 1;
+    }
+    while (isRightOutOfBounds(board, tetrolyso, newPosition)) {
+        newPosition.col -= 1;
+    }
+    while (isBottomOutOfBounds(board, tetrolyso, newPosition)) {
+        newPosition.row -= 1;
+    }
+    return newPosition;
+}
+
+export const isRowCompleted = (board: Board, rowIndex: number) => {
+    const boardElement = queryByRowAndColumn(board);
+
+    for (let col = 0; col < board.cols; ++col) {
+        if (boardElement(rowIndex, col) === 0) {
+            return false;
+        }
+    }
+    return true;
+}
+
+export const isRowEmpty = (board: Board, rowIndex: number) => {
+    const boardElement = queryByRowAndColumn(board);
+
+    for (let col = 0; col < board.cols; ++col) {
+        if (boardElement(rowIndex, col) !== 0) {
+            return false;
+        }
+    }
+    return true;
+}
