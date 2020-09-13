@@ -2,6 +2,7 @@ import {Client, Room} from "colyseus";
 import {GameState} from "../state/GameState";
 import {Position} from "../state/Position";
 import {isRowCompleted, isRowEmpty} from "./validation";
+import {addEmptyRowToBoard, deleteRowsFromBoard} from "../state/mutations";
 
 export class TetrolyseusRoom extends Room<GameState> {
     private DEFAULT_ROWS = 20;
@@ -27,6 +28,13 @@ export class TetrolyseusRoom extends Room<GameState> {
             }
         }
         return completedLines;
+    }
+
+    private updateBoard(completedLines: number[]) {
+        for (let rowIdx = 0; rowIdx < completedLines.length; ++rowIdx) {
+            deleteRowsFromBoard(this.state.board, completedLines[rowIdx] + rowIdx);
+            addEmptyRowToBoard(this.state.board);
+        }
     }
 
     onCreate(options: any) {
