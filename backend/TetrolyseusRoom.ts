@@ -3,6 +3,7 @@ import {GameState} from "../state/GameState";
 import {Position} from "../state/Position";
 import {isRowCompleted, isRowEmpty} from "./validation";
 import {addEmptyRowToBoard, deleteRowsFromBoard} from "../state/mutations";
+import {getRandomBlock} from "../state/Tetrolyso";
 
 export class TetrolyseusRoom extends Room<GameState> {
     private DEFAULT_ROWS = 20;
@@ -35,6 +36,15 @@ export class TetrolyseusRoom extends Room<GameState> {
             deleteRowsFromBoard(this.state.board, completedLines[rowIdx] + rowIdx);
             addEmptyRowToBoard(this.state.board);
         }
+    }
+
+    private dropNewTetrolyso() {
+        this.state.currentPosition = new Position(
+            0,
+            5
+        );
+        this.state.currentBlock = this.state.nextBlock.clone();
+        this.state.nextBlock = getRandomBlock();
     }
 
     onCreate(options: any) {
