@@ -4,8 +4,9 @@
   "description": "Tetrolyseus - A Tetris implementation with a twist",
   "main": "lib/index.js",
   "scripts": {
-    "start:backend": "ts-node backend/index.ts",
-    "start:frontend": "parcel frontend/index.html"
+    "start:backend": "nodemon --watch backend -e ts --exec \"ts-node backend/index.ts\"",
+    "start:frontend": "parcel frontend/index.html",
+    "start": "concurrently --kill-others-on-fail --handle-input \"npm run start:backend\" \"npm run start:frontend\""
   },
   "author": "Simon Hofmann <kontakt@s1h.org>",
   "bugs": {
@@ -15,6 +16,8 @@
   "devDependencies": {
     "@types/cors": "2.8.6",
     "@types/express": "4.17.6",
+    "concurrently": "5.3.0",
+    "nodemon": "2.0.4",
     "parcel": "1.12.4",
     "ts-node": "8.10.2",
     "typescript": "3.9.5"
