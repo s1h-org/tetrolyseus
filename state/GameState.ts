@@ -32,7 +32,10 @@ export class GameState extends Schema {
         super();
         this.board = new Board(rows, cols);
         this.currentBlock = getRandomBlock();
-        this.currentPosition = new Position(0, 5);
+        this.currentPosition = new Position(
+            0,
+            Math.floor((this.board.cols / 2) - (this.currentBlock.cols / 2))
+        );
         this.nextBlock = getRandomBlock();
         this.level = initialLevel;
         this.clearedLines = 0;
