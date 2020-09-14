@@ -5,11 +5,15 @@ import {Position} from "../state/Position";
 import {Client, Room} from "colyseus.js";
 import {GameState} from "../state/GameState";
 import {DOWN, LEFT, RIGHT} from "../messages/movement";
+import {NOT_READY, READY} from "../messages/readystate";
 
 const queryBoardElement = () => <HTMLDivElement>document.querySelector("#board");
 const queryPreviewElement = () => <HTMLDivElement>document.querySelector("#preview");
 const queryLevelElement = () => <HTMLDivElement>document.querySelector("#level");
 const queryScoreElement = () => <HTMLDivElement>document.querySelector("#score");
+const queryReadyModal = () => <HTMLDivElement>document.querySelector("#ready-modal");
+const queryReadyButton = () => <HTMLDivElement>document.querySelector("#ready");
+const queryNotReadyButton = () => <HTMLDivElement>document.querySelector("#not-ready");
 
 const clearBoard = () => {
     const boardElement = queryBoardElement();
@@ -98,12 +102,22 @@ const drawScore = (score: number) => {
     scoreElement.textContent = `${score}`;
 }
 
+const renderGame = (state: GameState) => {
+    clearBoard();
+    clearPreview();
+    drawBoard(state.board);
+    drawPreview(state.nextBlock);
+    drawTetrolyso(state.currentBlock, state.currentPosition);
+    drawScore(state.totalPoints);
+    drawLevel(state.level);
+};
+
 document.addEventListener('DOMContentLoaded', async () => {
     const client = new Client('ws://localhost:2567');
 
     const room: Room<GameState> = await client.joinOrCreate<GameState>("tetrolyseus");
 
-    document.addEventListener('keydown', (ev: KeyboardEvent) => {
+    const handleInput = (ev: KeyboardEvent) => {
         if (ev.code === "Space") {
             room.send("rotate", {});
         } else if (ev.code === "ArrowLeft") {
@@ -113,15 +127,25 @@ document.addEventListener('DOMContentLoaded', async () => {
         } else if (ev.code === "ArrowDown") {
             room.send("move", DOWN);
         }
-    });
+    };
+
+
+    const readyModal = queryReadyModal();
+    const readyButton = queryReadyButton();
+    const notReadyButton = queryNotReadyButton();
+
+    readyButton.addEventListener("click", () => room.send("ready", READY));
+    notReadyButton.addEventListener("click", () => room.send("ready", NOT_READY));
 
     room.onStateChange((newState: GameState) => {
-        clearBoard();
-        clearPreview();
-        drawBoard(newState.board);
-        drawPreview(newState.nextBlock);
-        drawTetrolyso(newState.currentBlock, newState.currentPosition);
-        drawScore(newState.totalPoints);
-        drawLevel(newState.level);
+        if (newState.running) {
+            if (!(typeof document.onkeydown === "function")) {
+                document.addEventListener('keydown', handleInput);
+            }
+            readyModal.style.display = "none";
+            renderGame(newState);
+        } else {
+            document.removeEventListener('keydown', handleInput);
+        }
     });
 });

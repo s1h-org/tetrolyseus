@@ -11,6 +11,7 @@ html, body {
 #board {
     display: grid;
     height: 85%;
+    width: 25%;
 }
 
 #playingfield {
@@ -35,4 +36,15 @@ html, body {
 #preview {
     display: grid;
     width: 25%;
+}
+
+#ready-modal {
+    position: fixed;
+    top: -50%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 50% auto;
+    height: fit-content;
+    width: fit-content;
+    z-index: 5;
 }
