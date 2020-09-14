@@ -25,6 +25,9 @@ export class GameState extends Schema {
     @type("number")
     totalPoints: number;
 
+    @type("boolean")
+    running: boolean;
+
     constructor(rows: number = 20, cols: number = 10, initialLevel = 0) {
         super();
         this.board = new Board(rows, cols);
@@ -34,5 +37,6 @@ export class GameState extends Schema {
         this.level = initialLevel;
         this.clearedLines = 0;
         this.totalPoints = 0;
+        this.running = false;
     }
 }
