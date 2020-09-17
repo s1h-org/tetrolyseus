@@ -5,9 +5,14 @@ import {Server} from "colyseus";
 import {monitor} from "@colyseus/monitor";
 
 import {TetrolyseusRoom} from "./TetrolyseusRoom";
+import {join} from "path";
 
 const port = Number(process.env.PORT || 2567);
 const app = express()
+
+const staticPath = join(__dirname, '../public');
+console.log(`Using static path '${staticPath}'`);
+app.use(express.static(staticPath));
 
 app.use(cors());
 app.use(express.json())
