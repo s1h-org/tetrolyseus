@@ -2,11 +2,15 @@
   "name": "tetrolyseus",
   "version": "1.0.0",
   "description": "Tetrolyseus - A Tetris implementation with a twist",
-  "main": "lib/index.js",
+  "main": "app/backend/index.js",
   "scripts": {
     "start:backend": "nodemon --watch backend -e ts --exec \"ts-node backend/index.ts\"",
+    "build:backend": "tsc -p tsconfig.json",
     "start:frontend": "parcel frontend/index.html",
-    "start": "concurrently --kill-others-on-fail --handle-input \"npm run start:backend\" \"npm run start:frontend\""
+    "build:frontend": "parcel build frontend/index.html",
+    "clean": "rimraf ./dist ./app",
+    "start": "concurrently --kill-others-on-fail --handle-input \"npm run start:backend\" \"npm run start:frontend\"",
+    "bundle": "npm run clean && npm run build:backend && npm run build:frontend && ncp dist/ app/public"
   },
   "author": "Simon Hofmann <kontakt@s1h.org>",
   "bugs": {
@@ -17,8 +21,10 @@
     "@types/cors": "2.8.6",
     "@types/express": "4.17.6",
     "concurrently": "5.3.0",
+    "ncp": "^2.0.0",
     "nodemon": "2.0.4",
     "parcel": "1.12.4",
+    "rimraf": "^3.0.2",
     "ts-node": "8.10.2",
     "typescript": "3.9.5"
   },
