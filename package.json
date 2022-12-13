@@ -33,7 +33,7 @@
     "colyseus": "0.13.7",
     "colyseus.js": "0.13.2",
     "cors": "2.8.5",
-    "express": "4.17.1",
+    "express": "4.17.3",
     "express-jwt": "5.3.3"
   },
   "browserslist": [
